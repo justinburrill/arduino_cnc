@@ -1,7 +1,7 @@
 from PIL import Image
 
 
-def makedata(filename):
+def make_data(filename):
     filepath = "img/out/" + filename
     img = Image.open(filepath)
     pixels = img.load()
