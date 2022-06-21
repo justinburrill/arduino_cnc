@@ -55,12 +55,17 @@ void setup() {
     if (data[i]) {
       drawPixel(pixel_size);
     }
+    if (i % img_size != 0) {
+      movePen("down");
+      movePen("left");
+    } else {
+      movePen("right")
+    }
   }
+  resetPen();
 }
 
 void loop() {}
-
-
 
 
 void drawPixel(int pixel_size) {
@@ -69,9 +74,15 @@ void drawPixel(int pixel_size) {
   pen(false);
 }
 
-void step(String dir) {
+void movePen(String dir) {
   if (dir == "right") {
     // step motors right one px
+  }
+  if (dir == "down") {
+    // step motors right one px
+  }
+  if (dir == "left") {
+    // step motors left all the way
   }
 }
 
