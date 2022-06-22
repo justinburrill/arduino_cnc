@@ -44,13 +44,26 @@ void setup() {
 
 
   while (!Serial.available());
-  int num = Serial.readString().toInt();
-
-
-  int paper_size;
-  int img_size;
-  int pixel_size = paper_size / img_size;
+  
+  int img_size = Serial.readString().toInt();
   bool data[img_size * img_size];
+
+  for (int i = 0; i < img_size*img_size; i++) {
+    int num = Serial.readString().toInt();
+    if (num == 1) {
+      data[i] = true;
+    }
+    if (num == 0) {
+      data[i] = false;
+    }
+    Serial.print(num);
+  }
+
+  
+  
+  int paper_size;
+
+  int pixel_size = paper_size / img_size;
   for (int i = 0; i < img_size * img_size; i++) {
     if (data[i]) {
       drawPixel(pixel_size);
@@ -59,7 +72,7 @@ void setup() {
       movePen("down");
       movePen("left");
     } else {
-      movePen("right")
+      movePen("right");
     }
   }
   resetPen();
