@@ -1,3 +1,4 @@
+# Importing Libraries
 import serial
 import time
 arduino = serial.Serial(port='COM8', baudrate=115200, timeout=.1)
@@ -6,10 +7,9 @@ def write_read(x):
     time.sleep(0.05)
     data = arduino.readline()
     return data
-while True:
-    num = input("Enter a number: ") # Taking input from user
-    value = write_read(num)
+info = [0,1,1,1]
+arduino.write(bytes(str(len(info)), 'utf-8'))
+for i in info:
+    # time.sleep(0.05)
+    value = write_read(str(i))
     print(value) # printing the value
-
-
-def send
