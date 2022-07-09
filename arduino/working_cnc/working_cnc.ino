@@ -30,6 +30,119 @@ Servo penServo;
 Stepper upperStepper(stepsPerRevolution, 9, 10, 11, 12);
 Stepper lowerStepper(stepsPerRevolution, 3, 4, 5, 6);
 
+float canvas_length = 2.6;
+
+
+void setup() {
+  Serial.begin(9600);
+  penServo.attach(penServoPin);
+  pen(false);
+  setup_lower();
+  setup_upper();
+
+  reset_motors();
+
+
+  // draw!
+  drawImg("bwtest");
+
+}
+
+void y(float amt, bool dot = false, int count = 1) {
+  float scale = 1.025; // adjst if one goes faster
+  for (int i = 0; i < count; i++) {
+    upperStepper.step(stepsPerRevolution * amt * scale);
+    if (dot) {
+      drawdot();
+    }
+  }
+}
+
+void x(float amt, bool dot = false, int count = 1) {
+  float scale = 1.0; // adjst if one goes faster
+  for (int i = 0; i < count; i++) {
+    lowerStepper.step(stepsPerRevolution * amt * scale);
+    if (dot) {
+      drawdot();
+    }
+  }
+}
+
+void reset_motors() {
+  x(canvas_length);
+  y(canvas_length);
+}
+
+void drawImg(String type) {
+  if (type == "square") {
+    int scale = 6;
+    x(0.3, true, scale);
+    y(0.3, true, scale);
+
+    x(-0.3, true, scale);
+    y(-0.3, true, scale);
+  }
+  else if (type == "circle") {
+    float r = 6;
+    float step_size = 0.05;
+
+    // r^2 = x^2 + y^2
+    for (int x = 0; x <= r; x += step_size) {
+      //      y = sqrt(r * r - x * x)
+    }
+  }
+  else if (type == "bwtest") {
+    int side_length = 2;
+    bool data[] = {true, true, false, false};
+  }
+}
+
+void printImg(int side_length, bool data[]) {
+  for (int i = 0; i < side_length; i++) {
+    for (int j = 0; j < side_length; j++) {
+      if ( data[side_length * i + j] == true ) {
+        drawdot();
+      }
+      x(canvas_length/side_length);
+    }
+    y(canvas_length/side_length);
+  }
+  //  int paper_size;
+  //
+  //  int pixel_size = paper_size / img_size;
+  //  for (int i = 0; i < img_size * img_size; i++) {
+  //    if (data[i]) {
+  //      drawPixel(pixel_size);
+  //    }
+  //    if (i % img_size != 0) {
+  //      movePen("down");
+  //      movePen("left");
+  //    } else {
+  //      movePen("right");
+  //    }
+  //  }
+}
+
+void pen(bool on) {
+  int off_deg = 140;
+  int on_deg = 147;
+  if (on) {
+    penServo.write(on_deg);
+  }
+  else {
+    penServo.write(off_deg);
+  }
+}
+
+
+
+void drawdot() {
+  pen(true);
+  delay(150);
+  pen(false);
+  delay(150);
+}
+
 void setup_lower() {
   lowerStepper.setSpeed(RPM);
   pinMode(2, OUTPUT); // for EN1
@@ -46,116 +159,7 @@ void setup_upper() {
   digitalWrite(13, HIGH); // enable EN2
 }
 
-void y(float amt, bool dot = false, int count = 1) {
-  float scale = 1.0; // adjst if one goes faster
-  for (int i = 0; i < count; i++) {
-    upperStepper.step(stepsPerRevolution * amt * scale);
-    if (dot) {
-      drawdot();
-    }
-  }
-}
 
-void x(float amt, bool dot = false, int count = 1) {
-  float scale = 1.0; // adjst if one goes faster
-  for (int i = 0; i < count; i++) {
-    lowerStepper.step(stepsPerRevolution * amt * scale);
-
-    if (dot) {
-      drawdot();
-    }
-  }
-}
-
-void setup() {
-  Serial.begin(9600);
-  penServo.attach(penServoPin);
-  pen(false);
-  setup_lower();
-  setup_upper();
-
-  reset_motors();
-  
-
-  // draw!
-//  drawimg("square");
-
-}
-
-void drawimg(String type) {
-  if (type == "square") {
-    int scale = 6;
-    x(0.3, true, scale);
-    y(0.3, true, scale);
-
-    x(-0.3, true, scale);
-    y(-0.3, true, scale);
-  }
-  else if (type == "circle") {
-    float r = 6;
-    float step_size = 0.05;
-
-    // r^2 = x^2 + y^2
-    for (int x = 0; x <= r; x += step_size) {
-//      y = sqrt(r * r - x * x)
-    }
-  }
-}
-
-void pen(bool on) {
-  int off_deg = 140;
-  int on_deg = 148;
-  if (on) {
-    penServo.write(on_deg);
-  }
-  else {
-    penServo.write(off_deg);
-  }
-}
-
-void reset_motors() {
-  int amt = -3;
-  x(amt);
-  y(amt);
-}
-
-void drawdot() {
-  pen(true);
-  delay(150);
-  pen(false);
-  delay(150);
-}
 
 void loop() {
-  //  // step one revolution  in one direction:
-  //  Serial.println("clockwise");
-  //  lowerStepper.step(3 * stepsPerRevolution);
-  //  upperStepper.step(3 * stepsPerRevolution);
-  //  pen(true);
-  //  delay(500);
-  //
-  //  // step one revolution in the other direction:
-  //  Serial.println("counterclockwise");
-  //  lowerStepper.step(-3 * stepsPerRevolution);
-  //  upperStepper.step(-3 * stepsPerRevolution);
-  //  pen(false);
-  //  delay(500);
-
-
-  //  for (int i = 0; i < 6; i++) {
-  //    upperStepper.step(0.25 * stepsPerRevolution);
-  //    dot();
-  //  }
-  //  for (int i = 0; i < 6; i++) {
-  //    lowerStepper.step(0.25 * stepsPerRevolution);
-  //    dot();
-  //  }
-  //  for (int i = 0; i < 6; i++) {
-  //    upperStepper.step(-0.25 * stepsPerRevolution);
-  //    dot();
-  //  }
-  //  for (int i = 0; i < 6; i++) {
-  //    lowerStepper.step(-0.25 * stepsPerRevolution);
-  //    dot();
-  //  }
 }
